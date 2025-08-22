@@ -1,9 +1,9 @@
 export default function DashboardHome() {
   const stats = [
-    { title: "Total Products", value: 128, color: "primary" },
-    { title: "Orders Today", value: 34, color: "secondary" },
-    { title: "Users", value: 54, color: "accent" },
-    { title: "Revenue", value: "$12,340", color: "success" },
+    { title: "Total Products", value: 528, color: "primary" },
+    { title: "Orders Today", value: 344, color: "secondary" },
+    { title: "Users", value: 2334, color: "accent" },
+    { title: "Revenue", value: "$879666", color: "success" },
   ];
 
   return (

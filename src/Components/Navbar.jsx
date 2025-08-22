@@ -1,4 +1,6 @@
 "use client";
+
+import { AnimatePresence, motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,12 +21,12 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-background-light dark:bg-background-dark shadow-md transition-colors duration-300">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-bold text-blue-600 dark:text-blue-400"
+          className="text-2xl font-bold text-indigo-600 dark:text-indigo-400"
         >
           Haven World
         </Link>
@@ -37,8 +39,8 @@ export default function Navbar() {
                 href={href}
                 className={`${
                   pathname === href
-                    ? "text-blue-600 dark:text-blue-400 font-semibold"
-                    : "hover:text-blue-500 dark:hover:text-blue-400"
+                    ? "text-indigo-600 dark:text-indigo-400 font-semibold border-b-2 border-indigo-600 dark:border-indigo-400 pb-1"
+                    : "text-gray-700 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors duration-200"
                 }`}
               >
                 {label}
@@ -51,7 +53,7 @@ export default function Navbar() {
             <li>
               <Link
                 href="/login"
-                className="px-4 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-200"
               >
                 Login
               </Link>
@@ -63,7 +65,7 @@ export default function Navbar() {
               </span>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="px-4 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors duration-200"
               >
                 Logout
               </button>
@@ -77,62 +79,66 @@ export default function Navbar() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-gray-700 dark:text-gray-200 text-2xl"
+          className="md:hidden text-gray-700 dark:text-gray-200 text-2xl p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
         >
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
 
       {/* Mobile Dropdown */}
-      <div
-        className={`md:hidden fixed top-16 left-0 w-full bg-background-light dark:bg-background-dark shadow-lg transition-transform duration-300 ${
-          menuOpen ? "translate-y-0" : "-translate-y-full"
-        }`}
-      >
-        <ul className="flex flex-col gap-4 px-6 py-6 font-medium">
-          {navLinks.map(({ href, label }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className={`block ${
-                  pathname === href
-                    ? "text-blue-600 dark:text-blue-400 font-semibold"
-                    : "hover:text-blue-500 dark:hover:text-blue-400"
-                }`}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ y: -300, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -300, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden fixed top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-lg z-40"
+          >
+            <ul className="flex flex-col gap-4 px-6 py-6 font-medium">
+              {navLinks.map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`block text-gray-700 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors duration-200 ${
+                      pathname === href ? "font-semibold" : ""
+                    }`}
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
 
-          {!session ? (
-            <li>
-              <Link
-                href="/login"
-                onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2 rounded-lg bg-blue-600 text-white text-center"
-              >
-                Login
-              </Link>
-            </li>
-          ) : (
-            <li>
-              <button
-                onClick={() => {
-                  signOut({ callbackUrl: "/" });
-                  setMenuOpen(false);
-                }}
-                className="w-full px-4 py-2 rounded-lg bg-red-600 text-white"
-              >
-                Logout
-              </button>
-            </li>
-          )}
+              {!session ? (
+                <li>
+                  <Link
+                    href="/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-4 py-2 rounded-lg bg-indigo-600 text-white text-center hover:bg-indigo-700 transition-colors duration-200"
+                  >
+                    Login
+                  </Link>
+                </li>
+              ) : (
+                <li>
+                  <button
+                    onClick={() => {
+                      signOut({ callbackUrl: "/" });
+                      setMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors duration-200"
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
 
-          <li className="flex justify-center"><ThemeToggle /></li>
-        </ul>
-      </div>
+              <li className="flex justify-center"><ThemeToggle /></li>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
