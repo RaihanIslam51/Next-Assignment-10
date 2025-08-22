@@ -1,6 +1,6 @@
 # Next.js 15 Product Management App
 
-### Live Demo: [https://next-assignment-10-femikhdbo-raihans-projects-432e364c.vercel.app/](https://next-assignment-10-femikhdbo-raihans-projects-432e364c.vercel.app/)
+### Live Demo: [https://next-assignment-10.vercel.app/](https://next-assignment-10.vercel.app/)
 
 ---
 
